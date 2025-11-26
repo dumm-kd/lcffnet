@@ -349,7 +349,7 @@ class Decoder(nn.Module):
                     nn.init.constant_(m.bias, 0)
 
 
-class CoTFormer(nn.Module):
+class LCFFFormer(nn.Module):
     def __init__(self,
                  decode_channels=64,
                  dropout=0.1,
@@ -359,11 +359,8 @@ class CoTFormer(nn.Module):
                  num_classes=6
                  ):
         super().__init__()
-        # pretrained_cfg = timm.create_model('swsl_resnet18').default_cfg
-        # pretrained_cfg['file'] = r"/home/dell/disk4/dell/dujunhao/semi_weakly_supervised_resnet18-118f1556.pth"
         self.backbone = timm.create_model(backbone_name, features_only=True, output_stride=32,
-                                          out_indices=(1, 2, 3, 4), pretrained=pretrained, pretrained_cfg_overlay=
-                                          dict(file="pretrain_weights/rest_lite.pth"))
+                                          out_indices=(1, 2, 3, 4), pretrained=pretrained)
         encoder_channels = self.backbone.feature_info.channels()
 
         self.decoder = Decoder(encoder_channels, decode_channels, dropout, window_size, num_classes)
